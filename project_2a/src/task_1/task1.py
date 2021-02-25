@@ -62,7 +62,7 @@ for cam in cams:
     #dst = dst[y:y+h, x:x+w]
     cv2.imwrite('output/task_1/'+cam+'_2_undistorted.png', dst)
     # Step (5): Save the parameters to a file. You can use OpenCV "FileStorage" class to write the intrinsic matrix.
-    s = cv2.FileStorage("parameters/"+cam+"parameters.xml", cv2.FileStorage_WRITE)
+    s = cv2.FileStorage("parameters/"+cam+"_camera_intrinsics.xml", cv2.FileStorage_WRITE)
     s.write("camera_matrix",mtx)
     s.write("distortion_coefficients",dist)
     s.release()

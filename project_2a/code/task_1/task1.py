@@ -52,14 +52,14 @@ for cam in cams:
     # "initUndistortRectifyMap()" and "remap()".
 
     h,  w = test_image.shape[:2]
-    newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 1, (w,h))
+    newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 0, (w,h))
 
     # undistort
     mapx, mapy = cv2.initUndistortRectifyMap(mtx, dist, None, newcameramtx, (w,h), 5)
     dst = cv2.remap(test_image, mapx, mapy, cv2.INTER_LINEAR)
     # crop the image
-    x, y, w, h = roi
-    dst = dst[y:y+h, x:x+w]
+    #x, y, w, h = roi
+    #dst = dst[y:y+h, x:x+w]
     cv2.imwrite('output/task_1/'+cam+'_2_undistorted.png', dst)
     # Step (5): Save the parameters to a file. You can use OpenCV "FileStorage" class to write the intrinsic matrix.
     s = cv2.FileStorage("parameters/parameters.xml", cv2.FileStorage_WRITE)

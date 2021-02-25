@@ -26,16 +26,16 @@ for cam in cams:
     world_space_points = []
     images = glob.glob('images/task_1/'+cam+'*.png')
     test_image = cv2.imread('images/task_1/'+cam+'_2.png')
-    test_image = cv2.cvtColor(test_image, cv2.COLOR_BGR2GRAY)
+    gray_test_image = cv2.cvtColor(test_image, cv2.COLOR_BGR2GRAY)
     for image_file in images:
         image = cv2.imread(image_file)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        gray = image
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
         # Step (2): Extract 3D-to-2D point correspondences.
         world_space_points.append(objp)
-        ret, chessboard_corners = cv2.findChessboardCorners(image, (9, 6), None)
+        ret, chessboard_corners = cv2.findChessboardCorners(gray, (9, 6), None)
         if ret:
-            corners2 = cv2.cornerSubPix(image, chessboard_corners, (11, 11), (-1, -1), criteria)
+            corners2 = cv2.cornerSubPix(gray, chessboard_corners, (11, 11), (-1, -1), criteria)
             image_plane_points.append(chessboard_corners)
 
             if image_file == 'images/task_1/'+cam+'_2.png':
@@ -47,7 +47,7 @@ for cam in cams:
 
     # Step (3): Calculate camera intrinsic parameters. Once the 3D-to-2D point correspondences are obtained, call OpenCV
     # library function "calibrateCamera()" to calculate the camera intrinsic matrix and distort coefficients.
-    ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(world_space_points, image_plane_points, test_image.shape[::-1], None, None)
+    ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(world_space_points, image_plane_points, gray_test_image.shape[::-1], None, None)
     # Step (4): Undistort the images of calibration board patterns with these parameters using the OpenCV library function
     # "initUndistortRectifyMap()" and "remap()".
 

@@ -55,7 +55,7 @@ for cam in cams:
     newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w,h), 0, (w,h))
 
     # undistort
-    mapx, mapy = cv2.initUndistortRectifyMap(mtx, dist, None, newcameramtx, (w,h), 5)
+    mapx, mapy = cv2.initUndistortRectifyMap(mtx, dist, None, newcameramtx, (w,h),5)
     dst = cv2.remap(test_image, mapx, mapy, cv2.INTER_LINEAR)
     # crop the image
     #x, y, w, h = roi

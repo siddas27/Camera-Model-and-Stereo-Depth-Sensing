@@ -20,7 +20,7 @@ right_image = cv2.imread('images/task_2/right_0.png')
 gray_left_image = cv2.cvtColor(left_image, cv2.COLOR_BGR2GRAY)
 gray_right_image = cv2.cvtColor(right_image, cv2.COLOR_BGR2GRAY)
 
-l = cv2.FileStorage('parameters/lef_camera_intrinsics.xml', cv2.FileStorage_READ)
+l = cv2.FileStorage('parameters/left_camera_intrinsics.xml', cv2.FileStorage_READ)
 l_mtx = l.getNode('camera_matrix').mat()
 l_dist = l.getNode('distortion_coefficients').mat()
 r = cv2.FileStorage('parameters/right_camera_intrinsics.xml', cv2.FileStorage_READ)
@@ -45,6 +45,7 @@ if ret:
     # Draw and display the corners
     cv2.drawChessboardCorners(right_image, (9, 6), corners2, ret)
     cv2.imwrite('output/task_2/right_corner_points_annotation.png', right_image)
+
 
 # Step 3
 ret, cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2, R, T, E, F = cv2.stereoCalibrate(world_space_points,
@@ -78,8 +79,8 @@ P2 = np.hstack((R,T.reshape(3,1)))
 lpoints = cv2.undistortPoints(left_corners,cameraMatrix1,distCoeffs1)
 rpoints = cv2.undistortPoints(right_corners,cameraMatrix2,distCoeffs2)
 
-utils.undistort_save(cameraMatrix1,distCoeffs1,left_image,R1,"left_undistorted_not_rectified")
-utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R,"left_undistorted_not_rectified")
+utils.undistort_save(cameraMatrix1,distCoeffs1,left_image,R1,"task_2/left_undistorted_not_rectified")
+utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R,"task_2/right_undistorted_not_rectified")
 
 
 p3d_points =cv2.triangulatePoints(P1,P2,lpoints,rpoints)
@@ -88,17 +89,17 @@ h,  w = left_image.shape[:2]
 R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(cameraMatrix1,distCoeffs1,cameraMatrix2,distCoeffs2,(w,h),R,T,R1,R,P1,P2,(w,h))
 
 
-utils.undistort_save(cameraMatrix1,distCoeffs1,left_image,R1,"left_undistorted_rectified")
-utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R2,"right_undistorted_rectified")
+utils.undistort_save(cameraMatrix1,distCoeffs1,left_image,R1,"task_2/left_undistorted_rectified")
+utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R2,"task_2/right_undistorted_rectified")
 
 
-s = cv2.FileStorage("parameters/stereo_rectification.xml", cv2.FileStorage_WRITE)
-s.write("R1",R1)
-s.write("R2",R2)
-s.write("P1",P1)
-s.write("P2",P2)
-s.write("Q",Q)
-s.release()
+sr = cv2.FileStorage("parameters/stereo_rectification.xml", cv2.FileStorage_WRITE)
+sr.write("R1",R1)
+sr.write("R2",R2)
+sr.write("P1",P1)
+sr.write("P2",P2)
+sr.write("Q",Q)
+sr.release()
 
 
 
@@ -110,7 +111,7 @@ retn, fcorners = cv2.findChessboardCorners(f, (8, 5), None)
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1, projection='3d')
-ax.plot(l)
+#ax.plot(l)
 utils.pltcam(ax)
 utils.pltcam(ax, R2,T)
 plt.show()

@@ -89,8 +89,8 @@ h,  w = left_image.shape[:2]
 R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(cameraMatrix1,distCoeffs1,cameraMatrix2,distCoeffs2,(w,h),R,T,R1,R,P1,P2,(w,h))
 
 
-utils.undistort_save(cameraMatrix1,distCoeffs1,left_image,R1,"task_2/left_undistorted_rectified")
-utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R2,"task_2/right_undistorted_rectified")
+utils.undistort_save(cameraMatrix1,distCoeffs1,left_image,R1,"task_2/left_undistorted_rectified",P1)
+utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R2,"task_2/right_undistorted_rectified",P2)
 
 
 sr = cv2.FileStorage("parameters/stereo_rectification.xml", cv2.FileStorage_WRITE)

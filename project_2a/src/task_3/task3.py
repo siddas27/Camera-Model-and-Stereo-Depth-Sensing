@@ -3,16 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import utils
 
-# criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
-# objp = np.zeros((6 * 9, 3), np.float32)
-# objp[:, :2] = np.mgrid[0:9, 0:6].T.reshape(-1, 2)
-# world_space_points = []
-# world_space_points.append(objp)
-# cams = ["left", "right"]
-#
-# left_image_points = []
-# right_image_points = []
-
 # Step 1
 
 
@@ -45,10 +35,19 @@ gray_left_image = cv2.cvtColor(left_image, cv2.COLOR_BGR2GRAY)
 gray_right_image = cv2.cvtColor(right_image, cv2.COLOR_BGR2GRAY)
 
 # Step 2.1
-left_dst = utils.undistort(l_mtx,l_dist,gray_left_image,None)
-right_dst = utils.undistort(r_mtx,r_dist,gray_right_image,None)
+left_dst = utils.undistort(l_mtx,l_dist,gray_left_image,R1,P1)
+right_dst = utils.undistort(r_mtx,r_dist,gray_right_image,R1,P2)
+cv2.imwrite("output/task_3/left_undistorted.png",left_dst)
+cv2.imwrite("output/task_3/right_undistorted.png",right_dst)
+
 # Step 2.2
-orb = cv2.ORB()
+orb = cv2.ORB_create()
 l_kp = orb.detect(left_dst,None)
+l_kp, des = orb.compute(left_dst,l_kp)
+
+# Step 2.3 - local maxima
+l2 = cv2.drawKeypoints(left_dst,l_kp,None, color=(255,0,0),flags=0)
+cv2.imwrite("output/task_3/left_detected_feature_points.png",l2)
 #r_orb = cv2.ORB.detect(right_dst,None)
 
+cv2.BFMatcher_create()

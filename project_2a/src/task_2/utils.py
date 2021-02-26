@@ -28,10 +28,12 @@ def pltcam(ax,R_prime=np.identity(3), t_prime=np.zeros((3, 1))):
     ax.set_zlabel('Z')
 
 
-def undistort_save(cameraMatrix, distCoeffs,image,R_,fname):
+def undistort_save(cameraMatrix, distCoeffs,image,R_,fname,P=None):
     h, w = image.shape[:2]
-    newcameramtx, roi = cv2.getOptimalNewCameraMatrix(cameraMatrix, distCoeffs, (w, h), 0, (w, h))
-
-    mapx, mapy = cv2.initUndistortRectifyMap(cameraMatrix,distCoeffs,R_,newcameramtx,(w,h),5)
+    if P is None:
+        newcameramtx, roi = cv2.getOptimalNewCameraMatrix(cameraMatrix, distCoeffs, (w, h), 0, (w, h))
+        mapx, mapy = cv2.initUndistortRectifyMap(cameraMatrix, distCoeffs, R_, newcameramtx, (w, h), 5)
+    else:
+        mapx, mapy = cv2.initUndistortRectifyMap(cameraMatrix,distCoeffs,R_,P,(w,h),5)
     dst = cv2.remap(image,mapx,mapy,cv2.INTER_LINEAR)
-    cv2.imwrite('output/task_2/'+fname+'.png', dst)
+    cv2.imwrite('output/'+fname+'.png', dst)

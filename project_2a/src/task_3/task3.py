@@ -43,11 +43,24 @@ cv2.imwrite("output/task_3/right_undistorted.png",right_dst)
 # Step 2.2
 orb = cv2.ORB_create()
 l_kp = orb.detect(left_dst,None)
-l_kp, des = orb.compute(left_dst,l_kp)
+l_kp, des1 = orb.compute(left_dst,l_kp)
+r_kp = orb.detect(right_dst,None)
+r_kp, des2 = orb.compute(right_dst,r_kp)
 
-# Step 2.3 - local maxima
+# todo Step 2.3 - local maxima
 l2 = cv2.drawKeypoints(left_dst,l_kp,None, color=(255,0,0),flags=0)
 cv2.imwrite("output/task_3/left_detected_feature_points.png",l2)
 #r_orb = cv2.ORB.detect(right_dst,None)
 
-cv2.BFMatcher_create()
+# Step 3
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+matches = bf.match(des1,des2)
+matches = sorted(matches, key = lambda x:x.distance)
+# cv2.drawMatchesKnn expects list of lists as matches.
+img3 = cv2.drawMatches(left_dst,l_kp,right_dst,r_kp,matches[:30],outImg=None,flags=2)
+cv2.imshow("s",img3)
+cv2.waitKey(700)
+
+# todo step 4 triangular points
+
+# todo step 5 plot 3D

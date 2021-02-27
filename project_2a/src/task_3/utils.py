@@ -1,3 +1,5 @@
+import math
+
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -27,10 +29,32 @@ def pltcam(ax, R_prime=np.identity(3), t_prime=np.zeros((3, 1))):
     ax.set_zlabel('Z')
 
 
-def undistort(cameraMatrix, distCoeffs, image, R_,P):
+def undistort(cameraMatrix, distCoeffs, image, R_, P):
     h, w = image.shape[:2]
     newcameramtx, roi = cv2.getOptimalNewCameraMatrix(cameraMatrix, distCoeffs, (w, h), 0, (w, h))
 
     mapx, mapy = cv2.initUndistortRectifyMap(cameraMatrix, distCoeffs, R_, P, (w, h), 5)
     dst = cv2.remap(image, mapx, mapy, cv2.INTER_LINEAR)
     return dst
+
+
+def find_distance(p, q):
+    p = np.array(p)
+    q = np.array(q)
+    distance = np.linalg.norm(p-q)
+    return distance
+
+
+def find_local_maxima(kp_o, max_dist):
+    kp = kp_o.copy()
+    for p in kp:
+        if p not in kp: break
+        for q in kp:
+            dist = find_distance(p.pt, q.pt)
+            if dist < max_dist and p.response >= q.response:
+                kp.remove(q)
+            # if dist < max_dist and p.response < q.response:
+            #     kp.remove(p)
+            #     break
+
+    return kp

@@ -55,7 +55,7 @@ ret, cameraMatrix1, distCoeffs1, cameraMatrix2, distCoeffs2, R, T, E, F = cv2.st
                                                                                               l_dist,
                                                                                               r_mtx,
                                                                                               r_dist,
-                                                                                              gray_left_image.shape[
+                                                                                               gray_left_image.shape[
                                                                                               ::-1], None,
                                                                                               None, None, None,
                                                                                               cv2.CALIB_FIX_INTRINSIC,
@@ -84,6 +84,7 @@ utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R,"task_2/right_undis
 
 
 p3d_points =cv2.triangulatePoints(P1,P2,lpoints,rpoints)
+# todo convert to nonhomo and plt
 h,  w = left_image.shape[:2]
 
 R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(cameraMatrix1,distCoeffs1,cameraMatrix2,distCoeffs2,(w,h),R,T,R1,R,P1,P2,(w,h))

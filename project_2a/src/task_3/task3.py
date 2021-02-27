@@ -46,10 +46,15 @@ l_kp = orb.detect(left_dst,None)
 l_kp, des1 = orb.compute(left_dst,l_kp)
 r_kp = orb.detect(right_dst,None)
 r_kp, des2 = orb.compute(right_dst,r_kp)
+#r_kp = utils.find_local_maxima(r_kp,1)
 
-# todo Step 2.3 - local maxima
-l2 = cv2.drawKeypoints(left_dst,l_kp,None, color=(255,0,0),flags=0)
-cv2.imwrite("output/task_3/left_detected_feature_points.png",l2)
+# Step 2.3 - find local maxima, draw keypoints and save image
+local_maxima_l_kp = utils.find_local_maxima(l_kp,6)
+
+l_kp_image = cv2.drawKeypoints(left_dst,l_kp,None, color=(255,0,0),flags=0)
+cv2.imwrite("output/task_3/left_detected_feature_points.png",l_kp_image)
+local_maxima_l_kp_image = cv2.drawKeypoints(left_dst,local_maxima_l_kp,None, color=(255,0,0),flags=0)
+cv2.imwrite("output/task_3/left_local_maxima_feature_points.png",local_maxima_l_kp_image)
 #r_orb = cv2.ORB.detect(right_dst,None)
 
 # Step 3
@@ -58,9 +63,10 @@ matches = bf.match(des1,des2)
 matches = sorted(matches, key = lambda x:x.distance)
 # cv2.drawMatchesKnn expects list of lists as matches.
 img3 = cv2.drawMatches(left_dst,l_kp,right_dst,r_kp,matches[:30],outImg=None,flags=2)
-cv2.imshow("s",img3)
-cv2.waitKey(700)
+cv2.imwrite("output/task_3/selected_matches_feature_points.png",img3)
 
 # todo step 4 triangular points
+p3d_points =cv2.triangulatePoints(P1,P2,l_kp,r_kp)
+
 
 # todo step 5 plot 3D

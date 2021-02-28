@@ -84,10 +84,11 @@ utils.undistort_save(cameraMatrix2,distCoeffs2,right_image,R,"task_2/right_undis
 
 
 p3d_points =cv2.triangulatePoints(P1,P2,lpoints,rpoints)
+nh_3d_points = p3d_points[:-1]/p3d_points[-1]
 # todo convert to nonhomo and plt
 h,  w = left_image.shape[:2]
 
-R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(cameraMatrix1,distCoeffs1,cameraMatrix2,distCoeffs2,(w,h),R,T,R1,R,P1,P2,(w,h))
+R1, R2, P1, P2, Q, validPixROI1, validPixROI2 = cv2.stereoRectify(cameraMatrix1,distCoeffs1,cameraMatrix2,distCoeffs2,(w,h),R,T,newImageSize=(w,h))
 
 
 utils.undistort_save(cameraMatrix1,distCoeffs1,left_image,R1,"task_2/left_undistorted_rectified",P1)
@@ -103,16 +104,9 @@ sr.write("Q",Q)
 sr.release()
 
 
-
-
-f =cv2.imread('output/task_2/left_undistorted_rectified.png')
-f = cv2.cvtColor(f,cv2.COLOR_BGR2GRAY)
-retn, fcorners = cv2.findChessboardCorners(f, (8, 5), None)
-
-
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1, projection='3d')
-#ax.plot(l)
-utils.pltcam(ax)
+ax.scatter(nh_3d_points[0],nh_3d_points[1],nh_3d_points[2],cmap='RGBA')
+utils.pltcam(ax, R1)
 utils.pltcam(ax, R2,T)
 plt.show()

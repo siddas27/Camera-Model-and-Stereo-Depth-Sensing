@@ -58,3 +58,15 @@ def find_local_maxima(kp_o, max_dist):
             #     break
 
     return kp
+
+def get_matched_key_points(matches,l_kp,r_kp):
+    matched_l_kp = []
+    matched_r_kp = []
+    for match in matches:
+        lid = match.queryIdx
+        rid = match.trainIdx
+        lx,ly = l_kp[lid].pt
+        rx,ry = r_kp[rid].pt
+        matched_l_kp.append([[lx,ly]])
+        matched_r_kp.append([[rx,ry]])
+    return matched_l_kp, matched_r_kp

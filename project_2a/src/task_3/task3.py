@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import utils
 
 # Step 1
-
-
 l = cv2.FileStorage('parameters/left_camera_intrinsics.xml', cv2.FileStorage_READ)
 l_mtx = l.getNode('camera_matrix').mat()
 l_dist = l.getNode('distortion_coefficients').mat()
@@ -66,7 +64,18 @@ img3 = cv2.drawMatches(left_dst,l_kp,right_dst,r_kp,matches[:30],outImg=None,fla
 cv2.imwrite("output/task_3/selected_matches_feature_points.png",img3)
 
 # todo step 4 triangular points
-p3d_points =cv2.triangulatePoints(P1,P2,l_kp,r_kp)
-
+matched_l_kp, matched_r_kp = utils.get_matched_key_points(matches,l_kp,r_kp)
+matched_l_kp = np.array(matched_l_kp)
+matched_r_kp = np.array(matched_r_kp)
+p3d_points =cv2.triangulatePoints(P1,P2,matched_l_kp,matched_r_kp)
+# homogenous to non-homogeneous coordinates
+nh_3d_points = p3d_points[:-1]/p3d_points[-1]
 
 # todo step 5 plot 3D
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1, projection='3d')
+ax.scatter(nh_3d_points[0],nh_3d_points[1],nh_3d_points[2],'gray')
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Z-axis')
+plt.show()

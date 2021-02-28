@@ -37,3 +37,4 @@ def undistort_save(cameraMatrix, distCoeffs,image,R_,fname,P=None):
         mapx, mapy = cv2.initUndistortRectifyMap(cameraMatrix,distCoeffs,R_,P,(w,h),5)
     dst = cv2.remap(image,mapx,mapy,cv2.INTER_LINEAR)
     cv2.imwrite('output/'+fname+'.png', dst)
+

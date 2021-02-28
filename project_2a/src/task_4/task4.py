@@ -49,12 +49,16 @@ stereo = cv2.StereoSGBM_create(minDisparity=-1,
         mode=cv2.STEREO_SGBM_MODE_HH)
 
 disparity = stereo.compute(left_dst,right_dst)
-disparity = cv2.normalize(src=disparity, dst=disparity, beta=0, alpha=255, norm_type=cv2.NORM_MINMAX);
+
+disparity = cv2.normalize(src=disparity, dst=disparity, beta=0, alpha=255, norm_type=cv2.NORM_MINMAX)
 disparity = np.uint8(disparity)
-cv2.imwrite('output/task_4/left_rectified.png',left_dst)
-cv2.imwrite('output/task_4/right_rectified.png',right_dst)
 
-cv2.imwrite('output/task_4/disparity.png',disparity)
-
-_3dImage = cv2.reprojectImageTo3D(	disparity, Q)
-cv2.imwrite('output/task_4/3d.png',_3dImage)
+cv2.imshow('ds',disparity)
+cv2.waitKey(890)
+# cv2.imwrite('output/task_4/left_rectified.png',left_dst)
+# cv2.imwrite('output/task_4/right_rectified.png',right_dst)
+#
+# cv2.imwrite('output/task_4/disparity.png',disparity)
+#
+# _3dImage = cv2.reprojectImageTo3D(	disparity, Q)
+# cv2.imwrite('output/task_4/3d.png',_3dImage)
